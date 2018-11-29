@@ -21,7 +21,7 @@ Start-Website -Name your_site
 Get-Website
 
 # force a log entry
-Invoke-WebRequest http://localhost -UseBasicParsing | Out-Null
+Invoke-WebRequest http://localhost:8080 -UseBasicParsing | Out-Null
 
 # force a log flush to guaruntee the log file is created
 netsh http flush logbuffer | Out-Null
