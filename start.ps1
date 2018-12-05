@@ -26,9 +26,31 @@ Invoke-WebRequest http://localhost:8080 -UseBasicParsing | Out-Null
 # force a log flush to guaruntee the log file is created
 netsh http flush logbuffer | Out-Null
 
+# confirm that ServiceMonitor.exe exists in this image
+if ( !(Test-Path 'C:\ServiceMonitor.exe') ) {
+  Echo 'C:\ServiceMonitor.exe does not exist on this image, therefore service health cannot be assessed and the application will never exit'
+
+  # wait for log file to get generated
+  While ($true) {
+
+    # mute output until the log file is generated
+    if ( Test-Path 'C:\iislog\W3SVC\u_extend1.log' ) {
+      Get-Content -Wait -Path 'C:\iislog\W3SVC\u_extend1.log'
+    }
+  }
+}
+
 # start a job to tail IIS logs
 ${log-job} = Start-Job -scriptblock {
-  Get-Content -path 'c:\iislog\W3SVC\u_extend1.log' -Tail 1 -Wait
+
+  # wait for log file to get generated
+  While ($true) {
+
+    # mute output until the log file is generated
+    if ( Test-Path 'C:\iislog\W3SVC\u_extend1.log' ) {
+      Get-Content -Wait -Path 'C:\iislog\W3SVC\u_extend1.log'
+    }
+  }
 }
 
 # start a job to monitor IIS health
@@ -43,7 +65,7 @@ While ($true) {
 
   # if health job is not running then kill the container
   if ((${health-job} | Where State -eq "Running").Count -eq 0) {
-    Echo 'The application appears to have died, exiting'
+    Echo 'ServiceMonitor.exe has died, exiting'
     exit
   }
 
