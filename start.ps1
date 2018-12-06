@@ -5,9 +5,6 @@
 # CONFIG_ENV value passed to container
 Get-ChildItem -Path "C:\docker\config\${env:CONFIG_ENV}\*" | Copy-Item -Destination "C:\inetpub\docker\"
 
-# remove all pre-existing iis sites
-Get-Website | Remove-Website
-
 # launch website
 New-WebSite -Name docker -Port ${env:PORT} -PhysicalPath "C:\inetpub\docker" -ApplicationPool "docker"
 
