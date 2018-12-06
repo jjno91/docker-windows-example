@@ -1,0 +1,5 @@
+# Docker Configuration Management
+
+This is a sub-optimal way of managing configurations because it requires you to store environment specific configuration with your environment agnositic source code and it requires you to rebuild your code in order to update a configuration value in any environment. However, many legacy Windows applications are not designed to load application configuration from environment variables. In those situations this method can serve as a vast improvement over the current configuration management state and offer you a stepping stone before transitioning to using environment variables.
+
+As mentioned, loading application config via environment variables is the preferred method when using Docker. This is the defacto standard for most modern languages, but legacy .net applications can require some work to get there. So at a minimum you probably just want to start the conversation with your development team. Entering some backlog items for the research and development can go a long way.

@@ -16,7 +16,8 @@ pipeline {
   stages {
     stage('Code Build') {
       steps {
-        powershell 'msbuild'
+        // you should have an msbuild command to build your application code here
+        // powershell 'msbuild'
       }
     }
     stage('Docker Build') {
@@ -27,12 +28,21 @@ pipeline {
     stage('Tag') {
       steps {
         powershell 'docker tag ${env:REGISTRY}:latest ${env:REGISTRY}:$(git rev-parse --short HEAD)'
+        powershell 'echo "New Image: $(git rev-parse --short HEAD)'
       }
     }
     stage('Push') {
       steps {
         powershell 'docker push ${env:REGISTRY}:latest'
         powershell 'docker push ${env:REGISTRY}:$(git rev-parse --short HEAD)'
+      }
+    }
+
+    // this stage goes away once this is running on Kubernetes
+    stage('Image Cleanup') {
+      steps {
+        powershell 'docker rmi ${env:REGISTRY}:latest'
+        powershell 'docker rmi ${env:REGISTRY}:$(git rev-parse --short HEAD)'
       }
     }
   }
