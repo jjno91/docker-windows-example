@@ -57,7 +57,7 @@ While ($true) {
     Echo 'ServiceMonitor.exe has died, exiting'
     
     # only exit if debugging isn't enabled
-    if (!${env:DEBUG}) {
+    if ( ! [boolean]::Parse("${env:DEBUG}") ) {
       exit
     }
   }
