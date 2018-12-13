@@ -32,6 +32,9 @@ RUN Import-Module WebAdministration; `
 # remove all pre-existing IIS sites
 RUN Get-Website | Remove-Website
 
+# put w3svc in a stopped state for ServiceMonitor to start at runtime
+RUN Stop-Service W3SVC
+
 # configure iis logging to a single log file
 RUN Set-WebConfigurationProperty -p 'MACHINE/WEBROOT/APPHOST' -fi 'system.applicationHost/log' -n 'centralLogFileMode' -v 'CentralW3C'
 RUN Set-WebConfigurationProperty -p 'MACHINE/WEBROOT/APPHOST' -fi 'system.applicationHost/log/centralW3CLogFile' -n 'truncateSize' -v 4294967295
