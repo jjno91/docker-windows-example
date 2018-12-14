@@ -10,6 +10,9 @@ ENV CONFIG_ENV dev
 ENV DEBUG false
 ENV PORT 8080
 
+# number of times servicemonitor will attempt to restart upon failure
+ENV RESTART_COUNT 3
+
 # load build artifacts into image
 RUN New-Item -ItemType directory -Path C:\docker
 COPY . C:\docker
@@ -31,9 +34,6 @@ RUN Import-Module WebAdministration; `
 
 # remove all pre-existing IIS sites
 RUN Get-Website | Remove-Website
-
-# put w3svc in a stopped state for ServiceMonitor to start at runtime
-RUN Stop-Service W3SVC
 
 # configure iis logging to a single log file
 RUN Set-WebConfigurationProperty -p 'MACHINE/WEBROOT/APPHOST' -fi 'system.applicationHost/log' -n 'centralLogFileMode' -v 'CentralW3C'

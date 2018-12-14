@@ -26,7 +26,11 @@ ${log-job} = Start-Job -scriptblock {
 
 # start a job to monitor iis health
 ${health-job} = Start-Job -scriptblock {
-  C:\ServiceMonitor.exe w3svc
+  $i = 0
+  while ( $i -lt ${env:RESTART_COUNT} ) {
+    $i++
+    C:\ServiceMonitor.exe w3svc
+  }
 }
 
 # dump application event logs up to this time
