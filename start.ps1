@@ -29,6 +29,7 @@ ${health-job} = Start-Job -scriptblock {
   $i = 0
   while ( $i -lt ${env:RESTART_COUNT} ) {
     $i++
+    Start-Sleep -Seconds 15
     C:\ServiceMonitor.exe w3svc
   }
 }
